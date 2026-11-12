@@ -25,3 +25,8 @@ report/Team10_EDA_source.zip
 
 # local full-folder archives (too large for GitHub; includes .venv and raw data)
 capstone.zip
+
+# personal working notes (kept locally, not part of the project repository)
+docs/STATUS.md
+docs/interpretation_audit.md
+docs/interpretation_audit.pdf
