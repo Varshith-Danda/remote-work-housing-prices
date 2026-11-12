@@ -64,3 +64,15 @@ lists each interpretive claim with the number behind it.
 The report is set in Latin Modern (body 10.9 pt, captions 10 pt, tables 9 pt, headings 12 to 17 pt). Figures are drawn in Latin Modern
 Roman too (read from the TinyTeX fonts, with a DejaVu Serif fallback; sizes are scaled in `src/viz.py` by `TEXT_SCALE`), so figure
 text matches the page. All tables use one size and are not scaled to fit.
+
+## Methodology submission (second assignment)
+
+`report/Team10_Methodology.pdf` describes the planned methods with first results; `notebooks/02_methods.ipynb` reproduces them
+(code in `src/methods.py`). Regenerate with `.venv/bin/python src/make_method_results.py` (about 10 minutes), then
+`.venv/bin/python report/make_method_tables.py` and `xelatex` twice in `report/`. `src/check_method_numbers.py` must report FAILED 0.
+
+## Final results submission (third assignment)
+
+`report/Team10_Results.pdf` summarizes the results, implications and challenges; `notebooks/03_results.ipynb` reproduces the follow-up
+analyses (code in `src/results.py`). Regenerate with `.venv/bin/python src/make_results.py` (after `src/make_method_results.py`), then
+`xelatex` twice in `report/`. `src/check_results_numbers.py` must report FAILED 0.

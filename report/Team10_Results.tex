@@ -1,0 +1,324 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.9}\renewcommand{\textfraction}{0.08}\renewcommand{\floatpagefraction}{0.95}
+\setcounter{topnumber}{3}\setcounter{bottomnumber}{2}\setcounter{totalnumber}{6}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{lmodern}
+\usepackage{authblk}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\graphicspath{{figures/}}
+
+\newcounter{fignum}
+\newcounter{tabnum}
+\newcommand{\fig}[3]{%
+  \begin{figure}[!tbp]\centering
+  \includegraphics[width=\linewidth]{#1}\par\vspace{2pt}
+  \refstepcounter{fignum}\label{#2}%
+  {\small\raggedright\textbf{Figure \thefignum.} #3\par}
+  \end{figure}}
+
+\title{Results, Implications, and Challenges:\\ Remote Work and Urban Housing Prices in Eight Sun Belt Metros}
+\author[1]{Sai Krishna Varshith Danda}
+\author[1]{Gayathri Kota}
+\author[1]{Eshitha Chowdary Kaka}
+\author[1]{Zain Khan}
+\affil[1]{Arizona State University, Tempe, AZ 85281, USA}
+\date{November 8, 2026}
+
+\begin{document}
+\maketitle
+
+\paragraph{Summary.} We asked whether the shift in housing demand toward the edges of cities that began in 2020 lasted through
+2025 in eight Sun Belt metros: Phoenix, Austin, Atlanta, Dallas, Tampa, Charlotte, Nashville and Las Vegas. Pooled across the eight,
+ZIP codes farther from downtown did gain more value after 2019, and that outward shift kept growing through 2025. That average is carried
+mostly by Atlanta, the only metro where the result is clear under every check we ran. Elsewhere the change is small, temporary, or
+too uncertain to call. On the ZIP codes where we also have rents, prices moved outward more than rents did, and that gap did not close
+after mortgage rates rose in 2022. ZIP codes where more people worked from home before the pandemic did not grow in a consistent way
+afterward: the sign of the relationship flips once income and home value are taken into account. Price-path groups follow the metro
+much more than distance or work-from-home share. Together, these results fit the argument that Sun Belt metros, with several job
+centers and room to build, show a weaker and more uneven version of the ``donut'' pattern found in large, dense cities. None of it is
+causal evidence, and we say why below.
+
+\section{What We Did}
+
+This report brings together our exploratory analysis and our methodology document, and adds the follow-up analyses the
+methodology promised. The data are the Zillow Home Value Index and Observed Rent Index by ZIP code \cite{zillow}, the 2015--2019
+American Community Survey for pre-pandemic work-from-home share, income and housing type \cite{acs}, and distance from each ZIP
+code to the nearer city hall (Dallas--Fort Worth and Tampa--St.\ Petersburg have two centers). The main sample is the 1,082 ZIP codes
+with a home value in every December from 2017 to 2025.
+
+Our main tool is an event study: for each year, how much more did a ZIP code 10 miles farther out gain, in percent, compared with
+December 2019, measured only against other ZIP codes in the same metro and year. Because neighboring ZIP codes move together, every
+interval comes from a spatial block bootstrap that redraws whole grid cells of neighbors (about 15 miles across). For work-from-home
+exposure we regress growth on the pre-2020 share with controls, and for the price-path groups we use $k$-means clustering. New in
+this report are four follow-ups: the event study on rents and on the price-to-rent ratio, the event study without ZIP codes that carry
+a data-quality flag, the work-from-home coefficient as controls are added one at a time (with an exposure-by-distance interaction), and
+a model of what separates the price-path groups. We also refit the exposure model without ZIP codes whose
+work-from-home estimate is unreliable. Of the follow-ups listed in the methodology, the monthly event study, the occupation-based
+remote-work score and the combined (ensemble) prediction models were not done, and they appear under next steps.
+
+\section{Results}
+
+\subsection{Sub-Question 1: did the gradient flatten, and did it last?}
+
+Figure~\ref{fig:summary} is the one-page answer, and Figure~\ref{fig:event} shows the full path for each metro. Pooled across all eight
+metros, the gradient coefficient is $+$0.48 in 2022 (interval $-$0.35 to $+$1.17) and $+$1.15 in 2025 (0.07 to 1.98), and the change from 2022 to
+2025 is $+$0.67 (0.12 to 1.22). So on average, farther ZIP codes gained more after 2019, and instead of reversing, the outward shift kept growing
+after 2022.
+
+The average hides very different metros. Atlanta is the clear case: its coefficient rises from $+$1.89 in 2022 to $+$4.98 in 2025
+(interval 2.40 to 6.46), and it is the only metro whose 2025 result is clear under every interval type we tried. Austin's coefficient
+rises late but its interval is wide. Tampa shows a clear outward shift by 2022 ($+$1.51, 0.17 to 2.37) that is no longer clear by 2025.
+Dallas and Charlotte show a spike in 2020 or 2021 and then return to about zero. Phoenix drifts below zero, and Las Vegas ends slightly below zero with an interval that includes zero. In Nashville the
+outer ZIP codes were already gaining before the pandemic (its 2017 coefficient is $-$1.92), so 2020 did not start that pattern.
+
+\textbf{Without flagged ZIP codes.} Our earlier reports flagged ZIP codes with an unreliable work-from-home estimate, a gap in their
+price series, an uncertain metro assignment, or no 2015--2019 Census row. These sit mostly at the metro edge. Dropping them leaves
+834 ZIP codes (orange diamonds in Figure~\ref{fig:summary}). The main result gets stronger, not weaker: Atlanta reaches $+$6.07 in 2025 (2.44
+to 7.98), and the pooled coefficient is $+$1.81 (0.57 to 2.76). Two metros change. Phoenix's decline disappears ($-$0.19, interval $-$1.62 to
+$+$0.80), which matches our exploratory finding that Phoenix's negative gradient rests on a handful of far-out ZIP codes. Las Vegas
+turns clearly negative ($-$1.18, $-$3.07 to $-$0.76). We read the Atlanta result as robust and the Phoenix and Las Vegas results as fragile.
+
+\fig{r_1_summary}{fig:summary}{Gradient coefficient by metro: how much more a ZIP code 10 miles farther out gained between December 2019
+and December 2022 (open circles) or December 2025 (filled), and in 2025 without ZIP codes that carry a data-quality flag (diamonds).
+Lines are 95\% spatial block-bootstrap intervals.}
+
+\fig{m_1_event_study}{fig:event}{The same coefficient for every year from 2017 to 2025, relative to December 2019. The blue band is the
+spatial block-bootstrap interval. The orange dashes are the ordinary interval that treats ZIP codes as independent, which is up to
+three times too narrow.}
+
+\subsection{Prices against rents: was it mortgage rates?}
+
+Mortgage rates jumped in 2022, so a change in the price gradient after 2022 could reflect financing and not where people want to live.
+Rents do not depend directly on mortgages, so we ran the same event study on rents, on prices for exactly the same ZIP codes, and on
+the price-to-rent ratio (Figure~\ref{fig:rent}). The ratio's coefficient is the price coefficient minus the rent coefficient, so its
+interval tells us whether the two gradients really differ. Only 403 ZIP codes have a rent in every December, and they are mostly inner
+and middle ZIP codes (22 of them are 30 or more miles out, against 271 in the full sample), so this is a check on the inner metro only.
+
+Three things show up. First, rents moved first: in 2020 the rent gradient rose ($+$1.46, 0.60 to 2.16) while the price gradient did not
+($-$0.27, $-$0.78 to $+$0.21). Second, prices then overtook rents: by 2022 the price-to-rent ratio rose with distance ($+$1.80, 0.91 to 2.52),
+meaning buyers paid more relative to rent the farther out they bought. Third, that gap did not close after rates rose: the ratio's change
+from 2022 to 2025 is $+$0.17 ($-$1.35 to $+$1.89). So the rent comparison shows no sign that higher rates undid the outward shift in prices,
+but the interval for the post-2022 change is wide and the outer ring is missing from this sample.
+
+This corrects a contrast in our exploratory analysis. There, on 478 ZIP codes with rents at both ends and with simple fits, rent growth
+in 2023--25 still rose with distance ($+$0.33) while price growth no longer did ($-$0.07), which looked like prices and rents parting
+after the rate shock. With the event study and spatial intervals, neither the price change nor the rent change after 2022 is
+distinguishable from zero, and neither is the difference between them, so we no longer read that contrast as evidence either way.
+
+\fig{r_2_rent}{fig:rent}{Left: the pooled within-metro gradient coefficient for prices and rents on the same 403 ZIP codes. Right: the
+coefficient for the price-to-rent ratio (prices minus rents, in logs). Bands are 95\% spatial block-bootstrap intervals.}
+
+\subsection{Where the expensive ZIP codes are}
+
+The single-distance model assumes value falls evenly in every direction from one center. Figure~\ref{fig:maps}, from our exploratory
+analysis, shows that this is not how these metros are laid out. In five of the eight metros the highest-value ZIP codes are concentrated
+on one side of the center ($p<0.01$ in each, from a permutation test in the first report): northeast of Phoenix's city hall, northwest of
+Austin's, north of Atlanta's, northeast of the two Dallas--Fort Worth halls and south of Nashville's. In Dallas--Fort Worth both cores sit
+in lower-value fifths. This matters for every result above: a gradient measured from
+one city hall averages over directions that behave differently, which is one reason the coefficients are noisy.
+
+\fig{2_3b_level_quintile_maps}{fig:maps}{December 2019 home value, ranked into fifths within each metro. The highest-value ZIP codes
+form wedges or patches on one side of the center, not rings around it. From our exploratory analysis.}
+
+\subsection{Sub-Question 2: did work-from-home exposure matter?}
+
+Figure~\ref{fig:exposure} shows the work-from-home coefficient as we add controls one group at a time. Without controls, ZIP codes with
+more pre-2020 work-from-home grew more slowly in 2020--22 ($-$0.29 per 5 points of work-from-home share) and faster in 2023--25 ($+$0.40). Adding
+distance changes almost nothing. Adding income and home value flips both signs, to $+$0.34 in 2020--22 and $-$0.36 in 2023--25, and adding
+housing type and pre-2020 growth after that changes little. In other words, the raw pattern is mostly a pattern of wealthier, more
+expensive neighborhoods: in the first report, work-from-home share had a rank correlation of $+$0.66 with income and $+$0.74 with home
+value. Once we compare neighborhoods of similar income and value, the remaining relationship runs the other way.
+
+How firm the controlled estimates are depends on the interval method. As our methodology document showed, the bootstrap intervals here
+are lopsided. The BCa interval, which corrects for that, excludes zero in every controlled specification, but the symmetric interval from
+the same bootstrap includes zero for 2020--22 once housing type is added (Figure~\ref{fig:exposure}). We therefore do not treat the 2020--22
+result as firm. We also tested whether exposure matters more in outer ZIP codes, as a remote-work story would suggest. It does not: the
+exposure-by-distance interaction is $+$0.04 for 2020--22 (interval $-$0.15 to $+$0.25) and $-$0.02 for 2023--25 ($-$0.18 to $+$0.23). Dropping the 230 ZIP codes with an unreliable work-from-home estimate
+leaves the pattern unchanged: the sign still flips when income and home value enter, the controlled estimates grow slightly
+($+$0.33 for 2020--22 and $-$0.36 for 2023--25 with housing type), and the 2020--22 symmetric interval still includes zero. Our prediction
+models agree. Scored on metros they had never seen, they explained only 10 to 30 percent of the variation in growth, and adding
+work-from-home share changed their accuracy by no more than 0.02.
+
+\fig{r_3_exposure}{fig:exposure}{The work-from-home coefficient (points of annual growth per 5 points of 2015--2019 work-from-home share)
+as controls are added from top to bottom. Thick lines are BCa intervals and thin grey lines are symmetric intervals, both from the same
+spatial block bootstrap. All models include metro fixed effects. 1,073 ZIP codes.}
+
+\subsection{Sub-Question 3: do ZIP codes form groups by price path?}
+
+The four $k$-means groups from our exploratory analysis are shown in Figure~\ref{fig:groups}. They are only weakly separated (silhouette
+0.36), but they are easy to describe. Group~1 (520 ZIP codes) rose the most and held its gains. Group~2 (415, about half of them in Dallas)
+rose less. Group~3 (89, three-quarters of them in Austin) is a boom and bust: the highest peak in 2022, then the largest fall after it.
+Group~4 (48) is the dense urban core of Atlanta and Dallas, a median of 4.4 miles from city hall with only 18\% detached houses, and it
+gained the least. That last group is the closest thing in our data to the weak center of the ``donut.'' Our plan expected types
+such as sustained appreciation, a boom followed by correction, delayed appreciation and stagnation. We find the first two and a
+low-appreciation group, but no delayed-appreciation group, and the four-group solution is not fully stable when ZIP codes are
+resampled (first report).
+
+To ask what separates the groups, we fit a multinomial logit using one group of features at a time and compared how much of the group
+membership each explains (Figure~\ref{fig:sep}). Metro explains by far the most (pseudo $R^2$ 0.39; it alone classifies 79\% of ZIP codes
+correctly, against 48\% for always guessing the largest group). Housing type comes next (0.08), then distance (0.03), home value (0.02),
+work-from-home share (0.01) and income (under 0.01). So distance separates the groups less than housing type, as our plan expected, but
+work-from-home share separates them least of all, which the plan did not expect.
+
+\fig{2_5c_clusters}{fig:groups}{The four $k$-means price-path groups: how distinct they are (left), which metros they come from (right) and
+their average paths (bottom). From our exploratory analysis.}
+
+\fig{r_4_clusters}{fig:sep}{How much of the price-path group membership each feature group explains on its own (McFadden pseudo $R^2$ of
+a multinomial logit). 1,064 ZIP codes with complete data.}
+
+\subsection{Our hypotheses, scored}
+
+Table~\ref{tab:score} compares each hypothesis from our project plan with what we found.
+
+\begin{table}[!tbp]\centering
+\refstepcounter{tabnum}\label{tab:score}%
+{\small\raggedright\textbf{Table \thetabnum.} Hypotheses from the project plan and what we found.\par}\vspace{3pt}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{8.6cm}}
+\toprule
+Hypothesis & Verdict & Evidence \\
+\midrule
+H1. The gradient flattens in 2020--22 and then holds, by less than in large dense metros. & Partly supported &
+Pooled, farther ZIP codes gain more and the shift keeps growing (2022 to 2025 change $+$0.67). Clear only in Atlanta; small, temporary or fragile elsewhere. The comparison with dense metros was not tested. \\
+H2. ZIP codes with more pre-2020 work-from-home grow faster after 2020, most in 2021--22. & Not supported &
+The sign depends on whether income and home value are controlled; no stronger effect in outer ZIP codes; adds nothing to prediction. Much weaker than metro-level estimates, which the plan did expect. \\
+H3. Three to five groups of price paths, separated less by distance than by remote work and housing. & Partly supported &
+Four groups, weakly separated. Housing type separates them more than distance, but work-from-home share least; metro dominates. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Discussion: Our Results and the Literature}
+
+\textbf{The gradient.} The Alonso--Muth--Mills model predicts that when commuting gets cheaper, the price gap between central and outer
+locations narrows \cite{alonso}. Gupta et al.\ found this in 2020 across U.S. metros, with rents flattening more than prices
+\cite{gupta}. Our 2020 numbers match that ordering: on the same ZIP codes, the rent gradient moved in 2020 and the price gradient did
+not. What happened next differs. Gupta et al.\ found that 2020 prices implied investors expected a partial return to city centers. On the ZIP codes in
+our metros that have rents, prices caught up with and passed rents by 2022, and the difference stayed through 2025. On persistence, our pooled result agrees
+with Mondragon and Wieland, who found the remote-work effect on prices grew until mid-2022 and then held \cite{mondragon}, and with
+Ramani, Alcedo and Bloom, who found the donut effect persistent where remote work stayed common \cite{ramani24}. It does not fit the
+full reversal that return-to-office policies might have produced.
+
+\textbf{Why most Sun Belt metros show so little.} Ramani and Bloom found large donuts in large cities, smaller ones in mid-sized cities
+and almost none in small ones \cite{ramani21}. Our metros range from mid-sized to large, and the one clear case, Atlanta, is not the largest
+of them (Dallas--Fort Worth is larger), so size alone does not explain the pattern. Two explanations from the literature fit better. First, Howard, Liebersohn and Ozimek predict that
+price gains fade where builders can add supply \cite{howard}, and most Sun Belt metros can build outward easily. We did not measure supply,
+so this is a hypothesis, not a finding. Second, these metros have several job centers \cite{waddell,leslie}. Our maps show wedges and
+patches of high value instead of rings, Dallas--Fort Worth has two centers whose cores are not its most valuable areas, and the price-path groups follow the metro much more than distance.
+If distance from one downtown was always a weak guide to prices here, there was less of a downtown premium for remote work to erase, which
+is what our literature review predicted.
+
+\textbf{Remote-work exposure.} Mondragon and Wieland estimate that each extra point of pre-2020 remote work raised a metro's house prices
+by about 0.92 percent \cite{mondragon}. Within metros we find nothing that stable. Our main controlled estimate (with income, home value and housing type), $+$0.29 points of
+annual growth per 5 points of work-from-home share in 2020--22, is about 0.06 points a year per point, roughly 0.2 percent over three years.
+The two are not directly comparable (across metros against within metros, different periods and outcomes), but the within-metro
+relationship is clearly much weaker. The flip in sign when income enters shows the problem this literature has worried about since Mokhtarian, Collantes and
+Gertz asked which way telecommuting and home location affect each other \cite{mokhtarian}: who works from home is not random. Measuring exposure before 2020
+removes one direction of that problem, but not the overlap with income.
+
+\textbf{Mortgage rates and mobility.} Fonseca and Liu show that locked-in mortgages sharply reduced moving after 2022 \cite{fonseca}. A
+gradient that holds after 2022 could therefore mean people stopped moving, not that preferences stayed put. Our rent check partly
+addresses this: renters are not locked in, and the rent gradient did not fall back either. But the rent sample leaves out the outer ring,
+so we cannot rule lock-in out.
+
+\textbf{Price-path groups.} Delmelle used trajectory clustering to find distinct types of neighborhood change \cite{delmelle}. Applied
+to post-pandemic home values, the same idea finds weak groups that mostly track the metro, with one principal component explaining 71\%
+of the variation. Our methodological takeaway is that price paths within a metro move together, so clustering them mainly recovers
+metro boundaries and overall amplitude, not distinct shapes.
+
+\textbf{Method.} Two findings matter beyond this project. Ordinary intervals that treat ZIP codes as independent were up to three times
+too narrow here, so studies of ZIP-level gradients that ignore spatial correlation may overstate their certainty. And because distance is
+a continuous ``treatment'' with no untreated group, event-study coefficients like ours are descriptive comparisons, as Callaway,
+Goodman-Bacon and Sant'Anna caution \cite{callaway}.
+
+\section{Ethical Implications}
+
+\textbf{Who gains and who pays.} Where outer ZIP codes gained value faster, as in Atlanta, homeowners there gained wealth, but renters and
+first-time buyers in those areas now face higher costs, and lower-income households who moved out for cheaper housing may find that option
+shrinking. The ability to work from home is itself unequal: in our data it rises with income and with professional jobs. The benefit of
+choosing where to live goes mostly to people who can work remotely, while workers whose jobs require being on site bear more of the cost of
+rising prices along the edge.
+
+\textbf{Uneven data quality.} The places where change is happening are the places our data describe worst. Unreliable Census estimates,
+missing rent data and gaps in the price series all cluster at the metro edge. A study like ours can therefore understate what happens to
+outer and rural communities, and decisions based on it could overlook them. We kept flagged ZIP codes in the main analysis and reported
+results with and without them for this reason.
+
+\textbf{How results could be misused.} ZIP-level results describe places, not people. A neighborhood's average does not tell us about any
+household in it, and treating it that way is the ecological fallacy. Variables such as income and work-from-home share are also correlated
+with race and ethnicity, which we did not study. Price-gradient results could be used to target investment or speculation in particular
+neighborhoods, which could push up costs for current residents. Because our results are descriptive, they should not guide housing policy
+or investment on their own.
+
+\textbf{Model-based data.} The Zillow index is the output of a proprietary valuation model, not a record of sales. Its errors may be larger in
+neighborhoods with few sales, often lower-income or outer areas, so our outcome may be less accurate for some communities than others.
+
+\section{Challenges and What We Would Do Differently}
+
+\textbf{Challenges.} (1) There is no comparison group: the pandemic touched every ZIP code at once, so we can describe patterns but not
+isolate remote work. (2) Work-from-home share is tangled with income and home value, and its sign depends on the controls. (3) Neighboring ZIP
+codes move together, so honest intervals are wide, and with only 16 to 44 grid cells per metro the bootstrap itself is uncertain; in the exposure
+model even the choice of interval type changes the verdict. (4) The data are imperfect: the Zillow index is smoothed and model-based, prices are
+nominal, rents cover only 403 ZIP codes over the full period, 248 ZIP codes have unreliable work-from-home estimates, and Census ZIP areas do not
+match postal ZIP codes exactly. (5) City hall is a weak stand-in for ``downtown'' in metros with several job centers. (6) Eight metros are too few
+to test why metros differ.
+
+\textbf{What we would do differently.} We would define centers from job locations (LEHD employment data) from the start, instead of a single
+city hall. We would use an occupation-based remote-work measure \cite{dingel} alongside the commute-based share, which depends on who already
+lived there. We would plan spatial inference from the beginning; we only learned how narrow the ordinary intervals were after the exploratory
+analysis. And we would use real (inflation-adjusted) prices and look for transaction-based data, which are not smoothed.
+
+\section{Next Steps}
+
+These are proposals, not work done for this project.
+\begin{enumerate}\setlength{\itemsep}{0pt}
+\item \textbf{Job centers.} Identify employment subcenters with LEHD job-location data and re-estimate the gradient from the nearest center,
+which tests the polycentric explanation directly.
+\item \textbf{Better exposure.} Build the occupation-based remote-work score \cite{dingel} from the occupation shares we already have, and
+compare it with the commute-based share.
+\item \textbf{Supply.} Add building permits or new housing units by ZIP code to test whether gains faded where building was easy, as Howard,
+Liebersohn and Ozimek predict \cite{howard}.
+\item \textbf{Timing and financing.} Run the event study monthly, and add each ZIP code's share of recent buyers as a measure of exposure to
+higher rates and lock-in \cite{fonseca}.
+\item \textbf{Comparison metros.} Add a few large, dense, single-center metros for comparison.
+\item \textbf{Ensembles.} Combine the four prediction models; we expect a small gain, as they already score alike.
+\end{enumerate}
+
+\begin{thebibliography}{99}\setlength{\itemsep}{0pt}
+\bibitem{zillow} Zillow Group. Zillow Home Value Index (ZHVI) and Zillow Observed Rent Index (ZORI), ZIP code. Zillow Research, data through
+August 2026. \url{https://www.zillow.com/research/data/} (retrieved October 6, 2026).
+\bibitem{acs} U.S. Census Bureau. American Community Survey 5-Year Estimates, 2015--2019, ZIP Code Tabulation Areas. Census Data API.
+\url{https://www.census.gov/data/developers/data-sets/acs-5year.html} (retrieved October 6, 2026).
+\bibitem{alonso} W. Alonso. \textit{Location and Land Use: Toward a General Theory of Land Rent}. Harvard University Press, 1964.
+\bibitem{gupta} A. Gupta, V. Mittal, J. Peeters, and S. Van Nieuwerburgh. Flattening the curve: Pandemic-induced revaluation of urban real
+estate. \textit{Journal of Financial Economics}, 146(2):594--636, 2022.
+\bibitem{mondragon} J. A. Mondragon and J. Wieland. Housing demand and remote work. NBER Working Paper 30041, 2022, revised May 2025.
+\bibitem{ramani24} A. Ramani, J. Alcedo, and N. Bloom. How working from home reshapes cities. \textit{Proceedings of the National Academy
+of Sciences}, 121(45):e2408930121, 2024.
+\bibitem{ramani21} A. Ramani and N. Bloom. The donut effect of COVID-19 on cities. NBER Working Paper 28876, 2021.
+\bibitem{howard} G. Howard, J. Liebersohn, and A. Ozimek. The short- and long-run effects of remote work on U.S. housing markets.
+\textit{Journal of Financial Economics}, 150(1):166--184, 2023.
+\bibitem{waddell} P. Waddell, B. J. L. Berry, and I. Hoch. Residential property values in a multinodal urban area: New evidence on the
+implicit price of location. \textit{Journal of Real Estate Finance and Economics}, 7(2):117--141, 1993.
+\bibitem{leslie} T. F. Leslie. Identification and differentiation of urban centers in Phoenix through a multi-criteria kernel-density
+approach. \textit{International Regional Science Review}, 33(2):205--235, 2010.
+\bibitem{mokhtarian} P. L. Mokhtarian, G. O. Collantes, and C. Gertz. Telecommuting, residential location, and commute-distance traveled:
+Evidence from State of California employees. \textit{Environment and Planning A}, 36(10):1877--1897, 2004.
+\bibitem{fonseca} J. Fonseca and L. Liu. Mortgage lock-in, mobility, and labor reallocation. \textit{Journal of Finance}, 79(6):3729--3772,
+2024.
+\bibitem{delmelle} E. C. Delmelle. Mapping the DNA of urban neighborhoods: Clustering longitudinal sequences of neighborhood socioeconomic
+change. \textit{Annals of the American Association of Geographers}, 106(1):36--56, 2016.
+\bibitem{callaway} B. Callaway, A. Goodman-Bacon, and P. H. C. Sant'Anna. Difference-in-differences with a continuous treatment. NBER
+Working Paper 32117, 2024.
+\bibitem{dingel} J. I. Dingel and B. Neiman. How many jobs can be done at home? \textit{Journal of Public Economics}, 189:104235, 2020.
+\end{thebibliography}
+
+\end{document}
